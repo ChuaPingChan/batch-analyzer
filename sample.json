@@ -1,0 +1,11 @@
+{
+    "batchFileDirs": [
+        "C:\\dir1",
+        "C:\\dir2"
+    ],
+    "blacklist": [
+        "C:\\test1.bat",
+        "C:\\test2.bat"
+    ],
+    "traceLogFilePath": ""
+}
