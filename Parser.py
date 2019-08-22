@@ -46,16 +46,21 @@ class Parser:
             newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isIn=True))
 
             for line in file:
-                mo = re.match(Parser.rgxExtrFuncName, line.strip())
+                stripped_line = line.strip()
+
+                newFuncNameMatchObj = re.match(Parser.rgxExtrFuncName, line.strip())
+
+                if stripped_line[0:5] == "exit ":
+                    newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isOut=True))
 
                 newContentLines.append(line)
 
-                if mo:
+                if newFuncNameMatchObj:
                     # Just entered a new function/subroutine
-                    currFuncName = mo.group(1)
+                    currFuncName = newFuncNameMatchObj.group(1)
                     newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isIn=True))
 
-        newContentLines.append(self.createEchoStmt(filebasename, 'main', isOut=True))
+        newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isOut=True))
 
         with open(filePath, 'w') as file:
             file.writelines(newContentLines)
@@ -64,7 +69,8 @@ class Parser:
         assert (isIn or isOut) and funcName
 
         direction = 'IN' if isIn else 'OUT'
-        return '\necho [' + direction + '] ' + filebasename + ' : ' + funcName + '\n' + '\necho [' + direction + '] ' + filebasename + ' : ' + funcName + ' >> ' + self.traceLogFilePath + '\n'
+        msg = 'echo [' + direction + '] ' + filebasename + ' : ' + funcName + r' %*'
+        return '\n' + msg + '\n' + msg + ' >> ' + self.traceLogFilePath + '\n'
 
     @staticmethod
     def isGitTrackedDir(dirPath):
