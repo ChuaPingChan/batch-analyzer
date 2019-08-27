@@ -41,7 +41,7 @@ class Parser:
         filebasename = os.path.basename(filePath)
         newContentLines = []
 
-        with open(filePath) as file:
+        with open(filePath, encoding='utf-8', errors='ignore') as file:
             currFuncName = 'main'
             newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isIn=True))
 
@@ -62,7 +62,7 @@ class Parser:
 
         newContentLines.append(self.createEchoStmt(filebasename, currFuncName, isOut=True))
 
-        with open(filePath, 'w') as file:
+        with open(filePath, 'w', encoding='utf-8') as file:
             file.writelines(newContentLines)
 
     def createEchoStmt(self, filebasename, funcName='', isIn=False, isOut=False):
